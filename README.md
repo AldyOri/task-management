@@ -24,9 +24,12 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+My pathectic attempt trying to learn backend, technology used :
+- PostgreSql
+- Prisma ORM
+- Nest js
+  
+## Project setup (not done yet)
 
 ```bash
 $ npm install
