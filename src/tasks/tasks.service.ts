@@ -83,11 +83,40 @@ export class TasksService {
     return task;
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async update(id: number, updateTaskDto: UpdateTaskDto) {
+    const taskExists = await this.prisma.task.findUnique({
+      where: { id },
+    });
+
+    if (!taskExists) {
+      throw new NotFoundException(`Task with ID ${id} not found`);
+    }
+
+    const updatedTask = await this.prisma.task.update({
+      where: { id },
+      data: {
+        ...updateTaskDto,
+      },
+    });
+
+    return {
+      message: 'Task updated successfully',
+      task: updatedTask,
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(id: number) {
+    try {
+      const deletedTask = await this.prisma.task.delete({ where: { id } });
+      return {
+        message: 'Task deleted successfully',
+        task: deletedTask,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`Task with ID ${id} not found`);
+      }
+      throw error;
+    }
   }
 }
